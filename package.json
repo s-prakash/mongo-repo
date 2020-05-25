@@ -1,0 +1,38 @@
+{
+  "name": "@s-prakash/mongo-repo",
+  "version": "1.0.0",
+  "description": "Repository for the mongoose (mongoDB) Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "nodemonConfig": {
+    "verbose": true,
+    "ignore": [
+      "test/*",
+      "docs/*",
+      ".git",
+      "node_modules/**/node_modules"
+    ],
+    "events": {},
+    "execMap": {
+      "js": "node --harmony"
+    },
+    "delay": "1000",
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "ext": "js,json"
+  },
+  "author": "s-prakash",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.1.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.8.10",
+    "morgan": "^1.9.1"
+  },
+  "dependencies": {
+    "progress": "^2.0.3"
+  }
+}
