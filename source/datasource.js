@@ -1,14 +1,14 @@
 
 module.exports = (config) => {
-    const config = config || {};
+    config = config || {};
 
     const db = config.db || {};
-    db.host = config.db.host || "mongodb://localhost:27017/";
-    db.name = config.db.name || "test";
+    db.host = db.host || "mongodb://localhost:27017/";
+    db.name = db.name || "test";
 
     const mongoose = config.mongoose || require('mongoose');
 
-    mongoose.connect(db.host + db.name, Object.assign({useNewUrlParser: true, useUnifiedTopology: true}, (db.options || {})).
+    mongoose.connect(db.host + db.name, Object.assign({useNewUrlParser: true, useUnifiedTopology: true}, (db.options || {}))).
     catch(error => console.error("mongoose.connect:error:" + error));
 
     const plugin = config.plugin || {};
@@ -20,10 +20,11 @@ module.exports = (config) => {
         try {
             mongoose.plugin(transformOutput);
         } catch (error) {
-            console.error("transformOutput: error:" + error.message);
+            console.error("plugin: transformOutput: error:" + error.message);
         }
     }
 
     config.mongoose = mongoose;
+    config.db = db;
     return mongoose;
 };

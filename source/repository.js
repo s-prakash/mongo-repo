@@ -5,6 +5,16 @@ class Repository {
         this.config = config;
     }
 
+    transformInput(data){
+        if(this.config.transformOutput === true) {
+            if(data.id) {
+                data._id = data.id;
+                delete data.id;
+            }
+        }
+        return data;
+    }
+
     getModel(collection_name) {
         const c = this.collections[collection_name];
         if(!c) {
@@ -31,39 +41,37 @@ class Repository {
         console.log('Search Collection starts');
         const c = this.getModel(collection_name);
         filter = filter || {};
-        if(filter.id) {
-            filter._id = filter.id;
-            delete filter.id;
-        }
+        filter = this.transformInput(filter);
         console.log(collection_name+' search:2:' + JSON.stringify(filter));
         const query = c.find(filter /* , { '_id': 0, 'name' :1, 'landing_page_id': 1, 'note': 1} */);
         console.log('Search Collection Ends');
         return await query.exec();
     }
 
-    /** TODO: Avoid calling app_get for modify APIs */
     async add(collection_name, data) {
-        //const app = new App(data);
         console.log('app create');
+        if(data._id || data.id){
+            return await this.update(collection_name, data);
+        }
         const c = this.getModel(collection_name);
-        await c.create(data); //.then(() => console.log('app created'));
-        return await this.get(collection_name);
+        return await c.create(data); //.then(() => console.log('app created'));
+        //return await this.get(collection_name);
     }
 
     async update(collection_name, data) {
-        //const app = new App(data);
         console.log('app update');
         const c = this.getModel(collection_name);
-        await c.updateOne({_id:data.id}, data); //.then(() => console.log('app created'));
-        return await this.get(collection_name);
+        data = this.transformInput(data);
+        return await c.update(data); //.then(() => console.log('app created'));
+        //return await this.get(collection_name);
     }
     
     async delete(collection_name, id) {
         //const app = new App(data);
         console.log('app delete');
         const c = this.getModel(collection_name);
-        await c.deleteOne({_id: id}); //.then(() => console.log('app created'));
-        return await this.get(collection_name);
+        return await c.deleteOne({_id: id}); //.then(() => console.log('app created'));
+        //return await this.get(collection_name);
     }
 }
 

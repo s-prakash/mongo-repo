@@ -1,10 +1,83 @@
-const db_collections = require('./source/collections');
+const datasource = require('./source/datasource');
+const Repository = require('./source/repository');
 
-//module.exports.repo;
-
-module.exports =  (config) => {
-    return db_collections(config);
+const createModel = function(config, ds, name, schema){
+    let collection = null;
+    if(!config.skipPlural) {
+        collection = ds.model(name, schema);
+    } else {
+        collection = ds.model(name, schema, name);
+    }
+    return collection;
 };
+
+class MongoRepo {
+    constructor(config){
+        const ds = datasource(config);
+        this.mongoose = ds;
+        this.Schema = ds.Schema;
+        this.config = config;
+        this.repository = null;
+        
+        this.createRepository_();
+    }
+
+    createRepository_() {
+        const config = this.config;      
+        const collections = {}; /** All Collections  */
+        const obj = config.collections;
+        if(obj) {
+            const ds = this.mongoose || datasource(config);
+            const Schema = ds.Schema;
+
+            const cm = config.createModel || createModel;
+            for (let [name, schemaDefinition] of Object.entries(obj)) {
+                const _schema =  this instanceof Schema ? schemaDefinition : new Schema(schemaDefinition);
+                let collection = cm(config, ds, name, _schema);
+                if(collection) {
+                    collections[name] = collection;
+                }
+            }
+            this.repository = new Repository(collections, ds, config);
+        }
+    }
+
+    createRepository(collections) {
+        this.config.collections = collections;
+        this.createRepository_();
+        return this.repository;
+    }
+}
+
+/* const mongoRepo = module.exports = {};
+
+mongoRepo.MongoRepo = MongoRepo;
+
+mongoRepo.mongoose =  (config) => {
+    mongoRepo._mongoose = datasource(config)
+    return datasource(config);
+};
+
+mongoRepo.repository = (config, ds) => {
+    ds = ds || mongoRepo.mongoose(config);
+    return db_collections(config, ds);
+}; 
+module.exports = mongoRepo;
+*/
+
+module.exports = MongoRepo;
+
+/* const mongoRepo = {};
+
+mongoRepo.mongoose =  (config) => {
+    return datasource(config);
+};
+
+mongoRepo.repository = (config, ds) => {
+    ds = ds || mongoRepo.mongoose(config);
+    return db_collections(config, ds);
+};
+module.exports = mongoRepo; */
 
 
 /* App.post('find', function(result) {
