@@ -1,15 +1,23 @@
 class Repository {
-    constructor(collections, mongoose, config) {
+    constructor(collections, config) {
         this.collections = collections;
-        this.mongoose = mongoose;
         this.config = config;
+        this.mongoose = config.mongoose;
     }
 
-    transformInput(data){
-        if(this.config.transformOutput === true) {
-            if(data.id) {
-                data._id = data.id;
-                delete data.id;
+    isTransformInput() {
+        let plugin = this.config.plugin;
+        return plugin && plugin.transformOutput === true;
+    }
+
+    transformInput(data) {
+        if(!!data){
+            if(this.isTransformInput()) {
+                if(data.id) {
+                    data._id = data.id;
+                    delete data.id;
+                    console.log('transformOutput:added:_id:deleted:id');
+                }
             }
         }
         return data;
@@ -25,6 +33,7 @@ class Repository {
 
     async get(collection_name) {
         const c = this.getModel(collection_name);
+        // add support for pagination
         const query = c.find({}/* , { '_id': 0, 'name' :1, 'landing_page_id': 1, 'note': 1} */);
         console.log('app list');
         return await query.exec();
@@ -51,18 +60,28 @@ class Repository {
     async add(collection_name, data) {
         console.log('app create');
         if(data._id || data.id){
-            return await this.update(collection_name, data);
+            return await this.updateOne(collection_name, data);
         }
         const c = this.getModel(collection_name);
         return await c.create(data); //.then(() => console.log('app created'));
         //return await this.get(collection_name);
     }
 
-    async update(collection_name, data) {
+    async updateOne(collection_name, data, filter, options) {
         console.log('app update');
         const c = this.getModel(collection_name);
-        data = this.transformInput(data);
-        return await c.update(data); //.then(() => console.log('app created'));
+        if(!filter){
+            filter = {};
+            let id = this.isTransformInput() ? data.id : data._id;
+            if(id) {
+                filter._id = id;
+            }
+        } else {
+            filter = this.transformInput(filter);
+        }
+        delete data.id;
+        delete data._id;
+        return await c.updateOne(filter, data, options); //.then(() => console.log('app created'));
         //return await this.get(collection_name);
     }
     

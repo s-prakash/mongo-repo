@@ -1,22 +1,23 @@
 const datasource = require('./source/datasource');
 const Repository = require('./source/repository');
 
-const createModel = function(config, ds, name, schema){
+const createModel = function(config, name, schema){
     let collection = null;
-    if(!config.skipPlural) {
-        collection = ds.model(name, schema);
-    } else {
+    let ds = config.mongoose;
+    if(config.skipPlural === true) {
         collection = ds.model(name, schema, name);
+    } else {
+        collection = ds.model(name, schema);
     }
     return collection;
 };
 
 class MongoRepo {
     constructor(config){
+        this.config = config;
         const ds = datasource(config);
         this.mongoose = ds;
         this.Schema = ds.Schema;
-        this.config = config;
         this.repository = null;
         
         this.createRepository_();
@@ -27,18 +28,17 @@ class MongoRepo {
         const collections = {}; /** All Collections  */
         const obj = config.collections;
         if(obj) {
-            const ds = this.mongoose || datasource(config);
-            const Schema = ds.Schema;
+            const Schema = this.Schema;
 
             const cm = config.createModel || createModel;
             for (let [name, schemaDefinition] of Object.entries(obj)) {
                 const _schema =  this instanceof Schema ? schemaDefinition : new Schema(schemaDefinition);
-                let collection = cm(config, ds, name, _schema);
+                let collection = cm(config, name, _schema);
                 if(collection) {
                     collections[name] = collection;
                 }
             }
-            this.repository = new Repository(collections, ds, config);
+            this.repository = new Repository(collections, config);
         }
     }
 
