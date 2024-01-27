@@ -9,7 +9,8 @@ module.exports = (config) => {
     const mongoose = config.mongoose || require('mongoose');
 
     mongoose.connect(db.host + db.name, (db.options || {})).
-    catch(error => console.error("mongoose.connect:error:" + error));
+    then(() => { console.log('Connected to MongoDB.');}).
+    catch(error => console.error("mongoose.connect: error: " + error));
 
     const plugin = config.plugin;
     if(!!plugin) {
