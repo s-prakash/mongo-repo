@@ -25,8 +25,10 @@ class MongoRepo {
 
     createRepository_() {
         const config = this.config;      
-        const collections = {}; /** All Collections  */
         const obj = config.collections;
+        if(this.repository == null) {
+            this.repository = new Repository({}, config);
+        }
         if(obj) {
             const Schema = this.Schema;
 
@@ -35,10 +37,9 @@ class MongoRepo {
                 const _schema =  this instanceof Schema ? schemaDefinition : new Schema(schemaDefinition);
                 let collection = cm(config, name, _schema);
                 if(collection) {
-                    collections[name] = collection;
+                    this.repository._push(name, collection);
                 }
             }
-            this.repository = new Repository(collections, config);
         }
     }
 

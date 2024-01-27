@@ -23,6 +23,10 @@ class Repository {
         return data;
     }
 
+    _push(collection_name, collection) {
+        this.collections[collection_name] = collection;
+    }
+
     getModel(collection_name) {
         const c = this.collections[collection_name];
         if(!c) {
