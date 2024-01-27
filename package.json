@@ -26,8 +26,10 @@
   },
   "author": "s-prakash",
   "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.1.0"
+  },
   "dependencies": {
-    "eslint": "^7.1.0",
     "mongodb": "^6.3.0",
     "mongoose": "^8.1.1"
   }

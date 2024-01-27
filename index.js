@@ -23,6 +23,12 @@ class MongoRepo {
         this.createRepository_();
     }
 
+    info() {
+        return {
+            collections: {count: Object.keys(this.config.collections).length}
+        }
+    }
+
     createRepository_() {
         const config = this.config;      
         const obj = config.collections;
