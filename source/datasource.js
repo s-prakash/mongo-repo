@@ -8,7 +8,7 @@ module.exports = (config) => {
 
     const mongoose = config.mongoose || require('mongoose');
 
-    mongoose.connect(db.host + db.name, Object.assign({useNewUrlParser: true, useUnifiedTopology: true}, (db.options || {}))).
+    mongoose.connect(db.host + db.name, (db.options || {})).
     catch(error => console.error("mongoose.connect:error:" + error));
 
     const plugin = config.plugin;
