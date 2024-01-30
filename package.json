@@ -1,11 +1,19 @@
 {
   "name": "mongosmooth",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Repository for the mongoose (mongoDB) Server",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s-prakash/mongo-repo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/s-prakash/mongo-repo/issues"
+  },
+  "homepage": "https://github.com/s-prakash/mongo-repo#readme",
   "nodemonConfig": {
     "verbose": true,
     "ignore": [
