@@ -1,40 +1,25 @@
-mongodb-compass-1.20.4-win32-x64
+Mongosmooth
+======
 
-mongodb-win32-x86_64-2012plus-4.2.2
+Installation
+--------
+```node 
+npm install mongosmooth
+```
 
-https://docs.mongodb.com
-mongod --dbpath=/data/db
-mongo
->db
->show dbs
->use db_name
+Getting Started
+---------------
 
-npm install mongodb --save
-https://docs.mongodb.com/manual/mongo/
-https://docs.mongodb.com/manual/tutorial/insert-documents/
-http://mongodb.github.io/node-mongodb-native/3.4/quick-start/quick-start/
-http://mongodb.github.io/node-mongodb-native/3.4/tutorials/connect/
-https://www.tutorialspoint.com/mongodb/mongodb_create_collection.htm
-https://www.quackit.com/mongodb/tutorial/mongodb_create_a_collection.cfm
+### Development Tools
+#### Nodemon
 
-npm install mongoose --save
-https://mongoosejs.com/
+-   **Installation**: `npm install -g nodemon`
+-   **Website**: [Nodemon](https://nodemon.io/)
+-   **GitHub**: [remy/nodemon](https://github.com/remy/nodemon#nodemon)
+-   Nodemon is a utility that monitors for changes in your Node.js applications and automatically restarts the server. It's useful during development to streamline the development process and eliminate the need for manual server restarts.
 
-npm install -g nodemon
-https://nodemon.io
-https://github.com/remy/nodemon#nodemon
+Usage Tips
+----------
+- **Intall and configure MongoDB Server** using this [MongoDB Documentation](https://github.com/s-prakash/mongo-repo/blob/master/mongodb.md)
 
-https://stackoverflow.com/questions/7034848/mongodb-output-id-instead-of-id
-https://stackoverflow.com/questions/9598505/mongoose-retrieving-data-without-id-field
-https://www.codepedia.org/ama/cleaner-code-in-nodejs-with-async-await-mongoose-calls-example
-
- 
-
-
-> d:/progs/mongo
-mongod --dbpath=./data/db
-
->
-nodemon --inspect index.js
-
-https://nodejs.dev/nodejs-accept-arguments-from-the-command-line
+-   **Debug with Nodemon**: Use `nodemon --inspect index.js` to debug your Node.js applications with Nodemon, allowing you to set breakpoints and inspect variables.
