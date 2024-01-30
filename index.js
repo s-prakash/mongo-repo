@@ -20,16 +20,16 @@ class MongoRepo {
         this.Schema = ds.Schema;
         this.repository = null;
         
-        this.createRepository_();
+        this.createOrUpdateRepository_();
     }
 
     info() {
         return {
-            collections: {count: Object.keys(this.config.collections).length}
+            collections: {count: Object.keys(this.repository.collections).length}
         }
     }
 
-    createRepository_() {
+    createOrUpdateRepository_() {
         const config = this.config;      
         const obj = config.collections;
         if(this.repository == null) {
@@ -51,82 +51,9 @@ class MongoRepo {
 
     createRepository(collections) {
         this.config.collections = collections;
-        this.createRepository_();
+        this.createOrUpdateRepository_();
         return this.repository;
     }
 }
 
-/* const mongoRepo = module.exports = {};
-
-mongoRepo.MongoRepo = MongoRepo;
-
-mongoRepo.mongoose =  (config) => {
-    mongoRepo._mongoose = datasource(config)
-    return datasource(config);
-};
-
-mongoRepo.repository = (config, ds) => {
-    ds = ds || mongoRepo.mongoose(config);
-    return db_collections(config, ds);
-}; 
-module.exports = mongoRepo;
-*/
-
 module.exports = MongoRepo;
-
-/* const mongoRepo = {};
-
-mongoRepo.mongoose =  (config) => {
-    return datasource(config);
-};
-
-mongoRepo.repository = (config, ds) => {
-    ds = ds || mongoRepo.mongoose(config);
-    return db_collections(config, ds);
-};
-module.exports = mongoRepo; */
-
-
-/* App.post('find', function(result) {
-    //console.log(this instanceof mongoose.Query); // true
-    // prints returned documents
-    console.log('find() returned ' + JSON.stringify(result));
-    // prints number of milliseconds the query took
-    console.log('find() took ' + (Date.now() - this.start) + ' millis');
-});
-appSchema.pre('init', function (doc) {
-    // Transform doc as needed here.  "this" is also the doc.
-    console.log('appSchema init pre');
-    doc.id = doc._id;
-    //delete doc['_id'];
-});
-
-
-appSchema.post('init', function (doc) {
-    // Transform doc as needed here.  "this" is also the doc.
-    console.log('appSchema init post');
-    doc.id = doc._id;
-    //delete doc['_id'];
-}); */
-
-/* appSchema.virtual('id').get(function () {
-     return this._id;
-}); */
-
-/* // Duplicate the ID field.
-appSchema.virtual('id').get(function(){
-    return this._id.toHexString();
-});
-
-// Ensure virtual fields are serialised.
-appSchema.set('toJSON', {
-    virtuals: true
-}); */
-
-//Transform
-/* Schema.options.toJSON.transform = function (doc, ret, options) {
-    // remove the _id of every document before returning the result
-    ret.id = ret._id;
-    delete ret._id;
-    delete ret.__v;
-} */
