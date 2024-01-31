@@ -1,6 +1,6 @@
 {
   "name": "mongosmooth",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Repository for the mongoose (mongoDB) Server",
   "main": "index.js",
   "scripts": {
