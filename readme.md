@@ -106,6 +106,7 @@ Properties And Usages Of Mongosmooth Object
 ```
 Using Schema with plugin:
 ```js
+    const castAggregation = require('mongoose-cast-aggregation');
     const mongooseLeanVirtuals = require('mongoose-lean-virtuals');
 
     // Example schema
@@ -134,6 +135,7 @@ Using Schema with plugin:
             //"mongodb://localhost:27017/"
             options: null // default to {}
         },
+        plugins:[castAggregation],
         collections: {
             user: userSchema,
         }
