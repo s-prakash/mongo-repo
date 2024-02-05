@@ -23,7 +23,7 @@ const mongoRepo = new mongoSmooth({
     db: { 
         host: "mongodb://127.0.0.1:27017/" // default to "mongodb://localhost:27017/"
     },
-    plugin: [{transformOutput: true}],
+    plugins: [{transformOutput: true}],
     collections: {
         account_type: {
             type_name: { type: String, enum: ['Savings', 'Current', 'BasicSavings'] },

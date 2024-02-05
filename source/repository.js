@@ -6,8 +6,7 @@ class Repository {
     }
 
     isTransformInput() {
-        let plugin = this.config.plugin;
-        return plugin && plugin.transformOutput === true;
+        return this.config.transformOutput === true;
     }
 
     transformInput(data) {

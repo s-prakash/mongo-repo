@@ -12,20 +12,19 @@ module.exports = (config) => {
     then(() => { console.log('Connected to MongoDB.');}).
     catch(error => console.error("mongoose.connect: error: " + error));
 
-    const plugin = config.plugin;
-    if(!!plugin) {
-        // TODO: iterate the plugin object and add them here 
-        const transformOutput = plugin.transformOutput;
-        if(transformOutput === true) { //TODO: needs to optimize 
-            const transformOutputPlugin = require('./transformOutput.plugin');
-            mongoose.plugin(transformOutputPlugin);
-        } else if(transformOutput) {
-            try {
-                mongoose.plugin(transformOutput);
+    const plugins = config.plugins;
+    if(!!plugins) {
+        plugins && plugins.array.forEach(plugin => {
+            try{
+                if(plugin.transformOutput === true) { 
+                    plugin = require('./transformOutput.plugin');
+                    config.transformOutput = true;
+                }
+                mongoose.plugin(plugin);
             } catch (error) {
-                console.error("plugin: transformOutput: error:" + error.message);
+                console.error("plugin: error:" + error.message);
             }
-        }
+        });       
     }
 
     config.mongoose = mongoose;
