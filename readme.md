@@ -25,17 +25,6 @@ const mongoRepo = new mongoSmooth({
     },
     plugin: [{transformOutput: true}],
     collections: {
-        user: {
-            first_name: String,
-            last_name: String,
-            dob: Date,
-            email: String,
-            username: String,
-            address: String,
-            created: { type: Date, default: Date.now },
-            updated: { type: Date, default: Date.now },
-            status: { type: String, enum: ['active', 'disabled', 'blocked'] }
-        },
         account_type: {
             type_name: { type: String, enum: ['Savings', 'Current', 'BasicSavings'] },
             balance_limit: { type: Number, default: -1 }
@@ -61,15 +50,6 @@ console.log("Repo Object Created.");
 module.exports = mongoRepo;
 
 ```
-Another Example:
-```js
-    db: { 
-        name: "mydbname", // default to "test"
-        options: null // default to {}
-    },
-    plugin: [],
-```
-Mongoose possible [options](https://mongoosejs.com/docs/connections.html#options) and [plugins](https://plugins.mongoosejs.io/) can be referred here.
 
 ```js
     // Fpr example in express.js app...
@@ -107,16 +87,61 @@ Mongoose possible [options](https://mongoosejs.com/docs/connections.html#options
     }
     });
 ```
-More Properties of mongosmooth object
+Properties And Usages Of Mongosmooth Object
 ```js
-    repo.config; // Input config object passed to the mongoSmooth, So repo.config.db, repo.config.collections will be available 
+    repo.config; // The config object passed to the mongoSmooth, And it can be used as repo.config.db, repo.config.collections. 
     repo.mongoose; // mongoose object
     repo.Schema; // mongoose.Schema Type
     repo.repository; // The mongoSmooth repository
     let userModel = repo.repository.collections['user'];
     // userModel is mongoose model object for user table which can be used directly as well.
+    
+    const castAggregation = require('mongoose-cast-aggregation');
+    repo.mongoose.plugin(castAggregation); 
+    const discounts = await userModel.aggregate([
+    // Will cast the address to a string, and the timestamp to a date object
+      { $match: { created: { $lt: Date.now() }, address: 20 } }
+    ]);
 
 ```
+Using Schema with plugin:
+```js
+    const mongooseLeanVirtuals = require('mongoose-lean-virtuals');
+
+    // Example schema
+    const userSchema = new mongoose.Schema({
+        first_name: String,
+        last_name: String,
+        dob: Date,
+        email: String,
+        username: String,
+        address: String,
+        created: { type: Date, default: Date.now },
+        updated: { type: Date, default: Date.now },
+        status: { type: String, enum: ['active', 'disabled', 'blocked'] }
+    });
+
+    userSchema.virtual('lowercase').get(function() {
+    return this.name.toLowerCase();
+    });
+
+    // Now, the `lowercase` property will show up even if you do a lean query
+    userSchema.plugin(mongooseLeanVirtuals);
+
+    const mongoRepo = new mongoSmooth({
+        db: { 
+            name: "mydbname", // default to "test"
+            //"mongodb://localhost:27017/"
+            options: null // default to {}
+        },
+        collections: {
+            user: userSchema,
+        }
+    });
+
+```
+Mongoose's [options](https://mongoosejs.com/docs/connections.html#options) and [plugins](https://plugins.mongoosejs.io/) can be used here.
+
 
 ## Contributor setup for Mongosmooth
 #### Nodemon
